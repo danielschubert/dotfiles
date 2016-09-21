@@ -1,11 +1,7 @@
-# i3 config file (v4)
-#
-# Please see http://i3wm.org/docs/userguide.html for a complete reference!
-
 set $mod Mod4
 
-font -b&h-lucida-medium-r-*-*-12-120-*-*-*-*-iso10646-1
-
+font pango:DejaVu Sans Mono, Terminus Bold Semi-Condensed 9
+font pango:opensans 9
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
 
@@ -15,8 +11,16 @@ bindsym $mod+Return exec i3-sensible-terminal
 # kill focused window
 bindsym $mod+Shift+Q kill
 
-# start dmenu (a program launcher)
-bindsym $mod+d exec dmenu_run
+# start rofi
+set $rofi-params -terminal i3-sensible-terminal -line-margin 0 -lines 20 -eh 1 -width 40 -bw 3 -kb-mode-next  Alt+Tab -kb-mode-previous  Alt+Control+Tab -bg "#222222"  -fg "#2ECC71" -hlbg  "#2ECC71"  -hlfg "#222222" -bg-active "#222222"  -fg-active "#2288DD" -font "Roboto Slab 12"   -opactiy 80
+bindsym $mod+d exec rofi -show run $rofi-params
+bindsym $mod+s exec rofi -show ssh $rofi-params 
+
+# change focus
+bindsym $mod+j focus left
+bindsym $mod+k focus down
+bindsym $mod+l focus up
+bindsym $mod+odiaeresis focus right
 
 # alternatively, you can use the cursor keys:
 bindsym $mod+Left focus left
@@ -24,6 +28,7 @@ bindsym $mod+Down focus down
 bindsym $mod+Up focus up
 bindsym $mod+Right focus right
 
+# alternatively, you can use the cursor keys:
 bindsym $mod+Shift+Left move left
 bindsym $mod+Shift+Down move down
 bindsym $mod+Shift+Up move up
@@ -39,7 +44,7 @@ bindsym $mod+v split v
 bindsym $mod+f fullscreen
 
 # change container layout (stacked, tabbed, default)
-bindsym $mod+s layout stacking
+#bindsym $mod+s layout stacking
 bindsym $mod+w layout tabbed
 bindsym $mod+e layout default
 
@@ -53,12 +58,17 @@ bindsym $mod+space focus mode_toggle
 bindsym $mod+a focus parent
 
 # focus the child container
-#bindcode $mod+d focus child
+# bindcode $mod+d focus child
+
+
+set $ws1 "1: www"
+set $ws3 "3: mail"
+set $ws2 "2: >_term"
 
 # switch to workspace
-bindsym $mod+1 workspace 1
-bindsym $mod+2 workspace 2: mail
-bindsym $mod+3 workspace 3
+bindsym $mod+1 workspace $ws1
+bindsym $mod+2 workspace $ws2
+bindsym $mod+3 workspace $ws3
 bindsym $mod+4 workspace 4
 bindsym $mod+5 workspace 5
 bindsym $mod+6 workspace 6
@@ -68,9 +78,9 @@ bindsym $mod+9 workspace 9
 bindsym $mod+0 workspace 10
 
 # move focused container to workspace
-bindsym $mod+Shift+exclam move container to workspace 1
-bindsym $mod+Shift+quotedbl move container to workspace 2
-bindsym $mod+Shift+section move container to workspace 3
+bindsym $mod+Shift+exclam move container to workspace $ws1
+bindsym $mod+Shift+quotedbl move container to workspace $ws2
+bindsym $mod+Shift+section move container to workspace $ws3
 bindsym $mod+Shift+dollar move container to workspace 4
 bindsym $mod+Shift+percent move container to workspace 5
 bindsym $mod+Shift+ampersand move container to workspace 6
@@ -86,6 +96,10 @@ bindsym $mod+Shift+R restart
 # exit i3 (logs you out of your X session)
 bindsym $mod+Shift+E exit
 
+# switch to neo2 keyboard layout
+bindsym Ctrl+Shift+1 exec --no-startup-id setxkbmap de
+bindsym Ctrl+Shift+2 exec --no-startup-id setxkbmap de neo -option
+
 # resize window (you can also use the mouse for that)
 mode "resize" {
         # These bindings trigger as soon as you enter the resize mode
@@ -96,6 +110,7 @@ mode "resize" {
         # Pressing down will grow the window’s height.
         bindsym j resize shrink width 10 px or 10 ppt
         bindsym k resize grow height 10 px or 10 ppt
+        bindsym l resize shrink height 10 px or 10 ppt
         bindsym odiaeresis resize grow width 10 px or 10 ppt
 
         # same bindings, but for the arrow keys
@@ -114,54 +129,59 @@ bindsym $mod+r mode "resize"
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
 bar {
-    output            DVI-I-1
+    output            LVDS1
     status_command    i3status
     position          top
     workspace_buttons yes
-    tray_output       primary
     
-    font -b&h-lucida-medium-r-*-*-12-120-*-*-*-*-iso10646-1
-
-    colors {
-        background #232323
-        statusline #DCDCDC
-
-        focused_workspace  #ffffff #285566
-        active_workspace   #ffffff #333333
-        inactive_workspace #888888 #222222
-        urgent_workspace   #ffffff #900000
-    }
+    font pango:Awesome 9
+    font pango:Open Sans Mono 9
+      colors {
+        separator #777777
+        background #1f2326
+        statusline #AAAAAA
+        focused_workspace #9FCA56 #9FCA56 #151718
+        active_workspace #DCCD69 #DCCD69 #151718
+        inactive_workspace #1f2326 #1f2326 #AAAAAA
+        urgent_workspace #CE4045 #CE4045 #FFFFFF
+      }
+      
 }
+client.focused #575ac9 #575ac9 #DADADA #9FCA56
+client.focused_inactive #9fca56 #9fca56 #151718 #A074C4
+client.unfocused #1f2326 #1f2326 #AAAAAA #A074C4
+client.urgent #CE4045 #CE4045 #FFFFFF #DCCD69
 
-client.focused          #3F8AC2 #69a9b2 #495257 #00DA8E
-client.focused_inactive #333333 #5F676A #ffffff #484e50
-client.unfocused        #333333 #424242 #888888 #292d2e
-client.urgent           #C10004 #900000 #ffffff #900000
-
-# 2 Screens 
-workspace 1 output DVI-I-1
-workspace "2: mail" output DVI-I-1
-workspace 3 output DVI-D-0
 workspace_auto_back_and_forth yes
+floating_maximum_size 1300 x 740
 
-set $bgbild "tr4smut0_-_Skull.png"
+assign [class="Vlc"] 4
+assign [class="Turtl"] 4
+assign [class="Pidgin"] 4
+#assign [class="Evolution"] $ws3
+assign [class="Vivaldi"] $ws1
 
-bindsym $mod+shift+i exec "iceweasel"
-bindsym $mod+shift+s exec "$HOME/bin/sublime/sublime_text"
-bindsym $mod+shift+l exec i3lock -d -i $bgbild
-bindsym $mod+shift+m exec evolution
-
-floating_maximum_size 1660x1000
-for_window [class="Pidgin"] floating enable
 for_window [class="Evolution"] floating enable
-for_window [class="Eog"] floating enable
+for_window [class="Qjactl"] floating enable
+for_window [class="Pidgin"] floating enable
+for_window [class="Calf"] floating enable
 
-assign [class="Vlc"] 3
-assign [class="Evolution"] 2: mail
-assign [class="Zim"] 3
+bindsym $mod+shift+f exec "firefox"
+bindsym $mod+shift+a exec "atom"
+bindsym $mod+shift+t exec "thunar"
+bindsym $mod+shift+l exec "i3lock -i .i3/astronaut-schwebt.png -d"
+bindsym $mod+shift+v exec "vivaldi"
 
-exec "$HOME/.xinitrc"
-exec --no-startup-id feh --bg-fill $bgbild
-exec pulseaudio
-exec owncloud
-exec pidgin
+#Scratchpad
+bindsym $mod+Shift+minus move scratchpad
+bindsym $mod+minus scratchpad show
+
+# Lautstärkeregler
+set $a --no-startup-id amixer -q set Master
+bindsym XF86AudioRaiseVolume exec $a 3dB+
+bindsym XF86AudioLowerVolume exec $a 3dB-
+bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle
+
+exec xrandr --output LVDS1 --mode 1366x768
+
+
